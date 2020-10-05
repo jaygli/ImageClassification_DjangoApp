@@ -7,7 +7,7 @@ from keras.models import load_model
 from keras.preprocessing import image
 import tensorflow as tf
 import json
-from tensorflow import Graph, Session
+from tensorflow import Graph
 
 
 img_height, img_width=224,224
@@ -19,7 +19,9 @@ labelInfo=json.loads(labelInfo)
 
 model_graph = Graph()
 with model_graph.as_default():
-    tf_session = Session()
+    gpuoptions = tf.compat.v1.GPUOptions(allow_growth=True)
+    tf_session = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpuoptions))
+    #K.set_session(tf_session)
     with tf_session.as_default():
         model=load_model('./models/MobileNetModelImagenet.h5')
 
