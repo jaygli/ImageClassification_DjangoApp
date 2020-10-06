@@ -16,7 +16,10 @@
  
  <input type="submit" value="Submit" ></div>
 
- <h2>The classification of the image is {{predictedLabel}}</h2>
+ <h2>The predicted results are </h2>
+ {% for result in predictedResults %}
+     <li>{{ result.label }}  {{result.prediction }}</li>
+  {% endfor %}
  <img src={{filePathName}} alt='imagename'>
  {{filePathName}}
 

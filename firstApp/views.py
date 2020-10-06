@@ -21,7 +21,6 @@ model_graph = Graph()
 with model_graph.as_default():
     gpuoptions = tf.compat.v1.GPUOptions(allow_growth=True)
     tf_session = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpuoptions))
-    #K.set_session(tf_session)
     with tf_session.as_default():
         model=load_model('./models/MobileNetModelImagenet.h5')
 
@@ -50,9 +49,16 @@ def predictImage(request):
             predi=model.predict(x)
 
     import numpy as np
-    predictedLabel=labelInfo[str(np.argmax(predi[0]))]
+    #predictedLabel=labelInfo[str(np.argmax(predi[0]))]
 
-    context={'filePathName':filePathName,'predictedLabel':predictedLabel[1]}
+    results = []
+    for idx, x in np.ndenumerate(predi[0]):
+        results.append ({"label": labelInfo[str(idx[0])][1], "prediction": x})
+    sortedResults = sorted(results, key=lambda x: x["prediction"], reverse=True)
+
+
+    #context={'filePathName':filePathName,'predictedLabel':predictedLabel[1]}
+    context={'filePathName':filePathName,'predictedResults':sortedResults[:5]}
     return render(request,'index.html',context) 
 
 def viewDataBase(request):
