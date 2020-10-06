@@ -2,7 +2,7 @@
 
 {% block content%}
 
-    <h2>Uplaod Image for Classification</h2>
+    <h2>Upload Image</h2>
 
     
     <br>
@@ -10,21 +10,23 @@
     <form method="post" enctype="multipart/form-data" action="predictImage">
   
  {% csrf_token %}
- <div class="col-md-4 col-sm-4"><label for="fname">Upload Image File Here:</label> </div> <input name="filePath" type="file"><br><br>
+ <input name="filePath" type="file">
  <br>
 
- 
- <input type="submit" value="Submit" ></div>
+ <input type="submit" value="Submit" >
+</form>
+<br>
 
+{% if filePathName %}
  <h2>The predicted results are </h2>
  {% for result in predictedResults %}
      <li>{{ result.label }}  {{result.prediction }}</li>
   {% endfor %}
- <img src={{filePathName}} alt='imagename'>
- {{filePathName}}
+  
+    <img src={{filePathName}} alt='imagename'>
+    {% endif %}
 
-</form>
-<br>
 
+</div>
 
 {% endblock %}
