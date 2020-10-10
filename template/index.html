@@ -2,7 +2,7 @@
 
 {% block content%}
 
-    <h2>Upload Image</h2>
+    <h2>Image Classifier</h2>
 
     
     <br>
@@ -13,18 +13,26 @@
  <input name="filePath" type="file">
  <br>
 
- <input type="submit" value="Submit" >
+ <input type="submit" value="What is it?" >
 </form>
 <br>
 
 {% if filePathName %}
  <h2>The predicted results are </h2>
+ <ol>
  {% for result in predictedResults %}
-     <li>{{ result.label }}  {{result.prediction }}</li>
+    {% with p=result.prediction %}
+        {% if p < 0.1 %}
+            <li>{{ result.label }}: < 0.1</li>
+        {% else %}
+            <li>{{ result.label }}:  {{p }}</li>
+        {% endif %}
+    {% endwith %}
   {% endfor %}
+</ol>
   
-    <img src={{filePathName}} alt='imagename'>
-    {% endif %}
+    <img src={{filePathName}} width='300' alt='imagename'>
+{% endif %}
 
 
 </div>

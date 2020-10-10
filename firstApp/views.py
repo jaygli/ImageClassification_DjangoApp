@@ -8,6 +8,9 @@ from keras.preprocessing import image
 import tensorflow as tf
 import json
 from tensorflow import Graph
+import threading
+import time
+import os
 
 
 img_height, img_width=224,224
@@ -30,7 +33,10 @@ def index(request):
     context={'a':1}
     return render(request,'index.html',context)
 
-
+def deleteFile(pathname):
+    time.sleep(2)
+    if os.path.exists(pathname):
+        os.remove(pathname)
 
 def predictImage(request):
     print (request)
@@ -56,6 +62,8 @@ def predictImage(request):
         results.append ({"label": labelInfo[str(idx[0])][1], "prediction": x})
     sortedResults = sorted(results, key=lambda x: x["prediction"], reverse=True)
 
+    x = threading.Thread(target=deleteFile, args=(testimage,))
+    x.start()
 
     #context={'filePathName':filePathName,'predictedLabel':predictedLabel[1]}
     context={'filePathName':filePathName,'predictedResults':sortedResults[:5]}
